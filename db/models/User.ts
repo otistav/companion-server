@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose';
 
-interface UserAttributes {
+export interface UserAttributes {
   email: string;
   username: string;
   password: string;
-  avatar: string;
+  avatar?: string;
 
 }
 
