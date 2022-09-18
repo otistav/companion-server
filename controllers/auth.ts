@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../db/models/User';
-import { register } from '../services/auth';
+import * as authService from '../services/auth';
 
 export const index = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,10 +18,11 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await register(req.body.username, req.body.email, req.body.password);
-    // const { accessToken, refreshToken } = await authService.generateTokens(user);
-    // res.set(process.env.ACCESS_HEADER as string, accessToken);
-    // res.set(process.env.REFRESH_HEADER as string, refreshToken);
+    const { email, username, password } = req.body;
+    const user = await authService.registerUser(username, email, password);
+    const { accessToken, refreshToken } = await authService.generateTokens(user);
+    res.set(process.env.ACCESS_HEADER as string, accessToken);
+    res.set(process.env.REFRESH_HEADER as string, refreshToken);
     res.send(user);
   } catch (error) {
     next(error);
