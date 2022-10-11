@@ -1,6 +1,6 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import connect from './db/index';
-import User from './db/models/User';
 import authRouter from './routes/auth';
 
 require('dotenv').config();
@@ -11,11 +11,7 @@ const API = `/api/v${API_VERSION}`;
   await connect();
 
   const app = express();
-  app.get('/', async (req: any, res: any) => {
-    const user = new User({ username: 'ff', password: 'fjdkf', email: 'fjcj' });
-    await user.save();
-    res.send(user);
-  });
+  app.use(bodyParser.json());
   app.use(`${API}/auth`, authRouter);
 
   app.listen(3000, () => {
